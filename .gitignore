@@ -1,0 +1,51 @@
+# ============================================================
+# OrbitWatch — Git Ignore
+# ============================================================
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Python environments
+.venv/
+venv/
+env/
+ENV/
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Runtime state
+data/runtime/
+
+# Runtime databases
+data/mission/*.db
+data/telemetry/*.db
+
+# Generated event recordings
+data/recordings/events/*.json
+data/recordings/events/*.jsonl
+
+# Generated IQ recordings
+data/recordings/iq/*
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/
+.idea/
+
+# Secrets / local configuration
+.env
+.env.*
+!.env.example

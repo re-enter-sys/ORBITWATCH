@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>OrbitWatch — Mission Control</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/dashboard.css') }}"
+    >
+</head>
+
+<body>
+
+<div class="space-grid"></div>
+<div class="stars stars-one"></div>
+<div class="stars stars-two"></div>
+
+
+<header class="topbar">
+
+    <div class="brand">
+        <div class="brand-mark">
+            <span class="orbit orbit-a"></span>
+            <span class="orbit orbit-b"></span>
+            <span class="planet"></span>
+        </div>
+
+        <div>
+            <div class="brand-name">ORBITWATCH</div>
+
+            <div class="brand-subtitle">
+                LINUX SATELLITE GROUND STATION
+            </div>
+        </div>
+    </div>
+
+
+    <div class="mission-state">
+
+        <span
+            class="status-dot"
+            id="systemDot"
+        ></span>
+
+        <div>
+            <span class="state-label">
+                GROUND STATION
+            </span>
+
+            <strong id="systemStatus">
+                CONNECTING
+            </strong>
+        </div>
+
+    </div>
+
+
+    <div class="interaction-state">
+
+        <span class="interaction-caption">
+            INTERACTION
+        </span>
+
+        <button
+            class="interaction-button active"
+            id="interactionMode"
+            type="button"
+            title="Toggle dashboard interaction mode"
+        >
+            <span class="interaction-led"></span>
+            ACTIVE
+        </button>
+
+    </div>
+
+
+    <div class="clock-panel">
+
+        <span class="clock-label">
+            UTC
+        </span>
+
+        <strong id="utcClock">
+            --:--:--
+        </strong>
+
+    </div>
+
+</header>
+
+
+<main class="mission-control">
+
+
+    <section class="hero">
+
+        <div>
+
+            <div class="eyebrow">
+
+                <span></span>
+
+                MISSION CONTROL / LIVE OPERATIONS
+
+            </div>
+
+
+            <h1>
+                SATELLITE
+                <strong>GROUND STATION</strong>
+            </h1>
+
+
+            <p>
+                Receive, decode, track and monitor satellite telemetry
+                through the OrbitWatch Linux ground station.
+            </p>
+
+        </div>
+
+
+        <div class="mode-card">
+
+            <span class="mode-caption">
+                OPERATING MODE
+            </span>
+
+            <strong id="operatingMode">
+                STANDBY
+            </strong>
+
+            <small id="modeDescription">
+                Awaiting telemetry reception
+            </small>
+
+        </div>
+
+    </section>
+
+
+    <section class="metric-grid">
+
+        <article
+            class="metric-card interactive-card"
+            tabindex="0"
+            data-detail="active-satellite"
+        >
+
+            <div class="metric-icon">◉</div>
+
+            <div>
+                <span>ACTIVE SATELLITE</span>
+                <strong id="activeSatellite">
+                    NO CONTACT
+                </strong>
+            </div>
+
+            <div class="metric-line"></div>
+
+        </article>
+
+
+        <article
+            class="metric-card interactive-card"
+            tabindex="0"
+            data-detail="packet-summary"
+        >
+
+            <div class="metric-icon">⌁</div>
+
+            <div>
+                <span>PACKETS RECEIVED</span>
+                <strong id="packetCount">0</strong>
+            </div>
+
+            <div class="metric-line"></div>
+
+        </article>
+
+
+        <article
+            class="metric-card interactive-card"
+            tabindex="0"
+            data-detail="satellite-summary"
+        >
+
+            <div class="metric-icon">◌</div>
+
+            <div>
+                <span>SATELLITES SEEN</span>
+                <strong id="satelliteCount">0</strong>
+            </div>
+
+            <div class="metric-line"></div>
+
+        </article>
+
+
+        <article
+            class="metric-card interactive-card"
+            tabindex="0"
+            data-detail="telemetry-summary"
+        >
+
+            <div class="metric-icon">✓</div>
+
+            <div>
+                <span>TELEMETRY STATE</span>
+                <strong id="telemetryState">
+                    WAITING
+                </strong>
+            </div>
+
+            <div class="metric-line"></div>
+
+        </article>
+
+    </section>
+
+
+    <section class="dashboard-grid">
+
+
+        <article class="panel orbit-panel">
+
+            <div class="panel-header">
+
+                <div>
+                    <span class="panel-kicker">
+                        01 / TRACKING
+                    </span>
+
+                    <h2>
+                        Orbital Situation
+                    </h2>
+                </div>
+
+
+                <span
+                    class="panel-status"
+                    id="trackingStatus"
+                >
+                    NO TRACK
+                </span>
+
+            </div>
+
+
+            <div
+                class="orbit-scene interactive-orbit"
+                id="orbitScene"
+                tabindex="0"
+                title="Inspect orbital tracking state"
+            >
+
+                <div class="orbit-ring ring-1"></div>
+                <div class="orbit-ring ring-2"></div>
+                <div class="orbit-ring ring-3"></div>
+
+
+                <div class="earth">
+
+                    <div class="earth-glow"></div>
+
+                    <div class="earth-surface">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="satellite-object"
+                    id="satelliteObject"
+                >
+
+                    <div class="satellite-body"></div>
+
+                    <div class="solar-panel left"></div>
+
+                    <div class="solar-panel right"></div>
+
+                    <div class="signal-wave wave-one"></div>
+
+                    <div class="signal-wave wave-two"></div>
+
+                </div>
+
+
+                <div class="orbit-label label-a">
+                    GROUND TRACK
+                </div>
+
+                <div class="orbit-label label-b">
+                    LEO
+                </div>
+
+                <div class="orbit-label label-c">
+                    EARTH
+                </div>
+
+            </div>
+
+
+            <div class="orbit-footer">
+
+                <div>
+                    <span>TRACKING</span>
+                    <strong id="orbitSatellite">—</strong>
+                </div>
+
+                <div>
+                    <span>LAST CONTACT</span>
+                    <strong id="lastContact">—</strong>
+                </div>
+
+                <div>
+                    <span>DATA SOURCE</span>
+                    <strong id="dataSource">—</strong>
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <article class="panel receiver-panel">
+
+            <div class="panel-header">
+
+                <div>
+                    <span class="panel-kicker">
+                        02 / RADIO
+                    </span>
+
+                    <h2>
+                        SDR Receiver
+                    </h2>
+                </div>
+
+
+                <span
+                    class="panel-status"
+                    id="receiverStatus"
+                >
+                    OFFLINE
+                </span>
+
+            </div>
+
+
+            <div class="receiver-display">
+
+                <div class="frequency-display">
+
+                    <span>
+                        CENTER FREQUENCY
+                    </span>
+
+                    <strong id="frequencyValue">
+                        145.800
+                    </strong>
+
+                    <small>
+                        MHz
+                    </small>
+
+                </div>
+
+
+                <div class="signal-meter">
+
+                    <div class="meter-header">
+
+                        <span>
+                            SIGNAL LEVEL
+                        </span>
+
+                        <strong id="signalLevel">
+                            NO SIGNAL
+                        </strong>
+
+                    </div>
+
+
+                    <div class="meter-track">
+
+                        <div
+                            class="meter-fill"
+                            id="signalMeter"
+                        ></div>
+
+                    </div>
+
+
+                    <div class="meter-scale">
+
+                        <span>-100</span>
+                        <span>-80</span>
+                        <span>-60</span>
+                        <span>-40</span>
+                        <span>-20</span>
+                        <span>0 dB</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="receiver-stats">
+
+                <div>
+                    <span>STATE</span>
+                    <strong id="receiverState">
+                        IDLE
+                    </strong>
+                </div>
+
+                <div>
+                    <span>DEVICES</span>
+                    <strong id="receiverDevices">
+                        0
+                    </strong>
+                </div>
+
+                <div>
+                    <span>MODE</span>
+                    <strong>
+                        RX ONLY
+                    </strong>
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <article class="panel telemetry-panel">
+
+            <div class="panel-header">
+
+                <div>
+                    <span class="panel-kicker">
+                        03 / TELEMETRY
+                    </span>
+
+                    <h2>
+                        Live Telemetry
+                    </h2>
+                </div>
+
+
+                <span
+                    class="panel-status"
+                    id="telemetryStatus"
+                >
+                    NO DATA
+                </span>
+
+            </div>
+
+
+            <div
+                class="telemetry-empty"
+                id="telemetryEmpty"
+            >
+
+                <div class="empty-icon">
+                    ⌁
+                </div>
+
+                <strong>
+                    AWAITING TELEMETRY
+                </strong>
+
+                <p>
+                    No decoded satellite telemetry is currently
+                    available.
+                </p>
+
+            </div>
+
+
+            <div
+                class="telemetry-values"
+                id="telemetryValues"
+            ></div>
+
+        </article>
+
+
+        <article class="panel packet-panel">
+
+            <div class="panel-header">
+
+                <div>
+                    <span class="panel-kicker">
+                        04 / PACKETS
+                    </span>
+
+                    <h2>
+                        Packet Analysis
+                    </h2>
+                </div>
+
+
+                <span class="panel-status status-good">
+                    ENGINE READY
+                </span>
+
+            </div>
+
+
+            <div class="packet-summary">
+
+                <div class="packet-total">
+
+                    <span>
+                        TOTAL DECODED
+                    </span>
+
+                    <strong id="packetTotal">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="packet-quality">
+
+                    <div class="quality-row">
+                        <span>VALID</span>
+                        <strong id="validPackets">
+                            0
+                        </strong>
+                    </div>
+
+                    <div class="quality-row">
+                        <span>CRC OK</span>
+                        <strong id="crcPackets">
+                            0
+                        </strong>
+                    </div>
+
+                    <div class="quality-row">
+                        <span>INVALID</span>
+                        <strong id="invalidPackets">
+                            0
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="packet-bar">
+                <div id="packetValidBar"></div>
+            </div>
+
+
+            <div class="packet-caption">
+
+                <span>
+                    TELEMETRY DECODER
+                </span>
+
+                <strong id="decoderState">
+                    READY
+                </strong>
+
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <section class="panel history-panel">
+
+        <div class="panel-header">
+
+            <div>
+                <span class="panel-kicker">
+                    05 / HISTORY
+                </span>
+
+                <h2>
+                    Telemetry Timeline
+                </h2>
+            </div>
+
+
+            <div class="panel-actions">
+
+                <span class="panel-status">
+                    LAST 50 RECORDS
+                </span>
+
+                <button
+                    class="console-button"
+                    id="historyRefresh"
+                    type="button"
+                    title="Refresh telemetry history"
+                >
+                    ↻
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="history-chart"
+            id="historyChart"
+        >
+
+            <div class="history-empty">
+
+                <div>◒</div>
+
+                <strong>
+                    NO HISTORICAL TELEMETRY
+                </strong>
+
+                <span>
+                    Telemetry records will appear here after
+                    successful decoding.
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="bottom-grid">
+
+
+        <article class="panel mission-log">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <span class="panel-kicker">
+                        06 / EVENTS
+                    </span>
+
+                    <h2>
+                        Mission Event Log
+                    </h2>
+
+                </div>
+
+
+                <div class="panel-actions">
+
+                    <span
+                        class="panel-status"
+                        id="missionLogStatus"
+                    >
+                        SYSTEM
+                    </span>
+
+                    <button
+                        class="console-button"
+                        id="missionLogRefresh"
+                        type="button"
+                        title="Refresh mission log"
+                    >
+                        ↻
+                    </button>
+
+                    <button
+                        class="console-button"
+                        id="missionLogExpand"
+                        type="button"
+                        title="Expand mission log"
+                    >
+                        ⛶
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="mission-controls">
+
+                <div class="mission-search">
+
+                    <span>⌕</span>
+
+                    <input
+                        id="missionSearch"
+                        type="search"
+                        placeholder="Search mission events..."
+                        autocomplete="off"
+                    >
+
+                </div>
+
+
+                <select
+                    id="missionSeverity"
+                    class="mission-filter"
+                >
+                    <option value="">
+                        ALL SEVERITY
+                    </option>
+
+                    <option value="INFO">
+                        INFO
+                    </option>
+
+                    <option value="SUCCESS">
+                        SUCCESS
+                    </option>
+
+                    <option value="WARNING">
+                        WARNING
+                    </option>
+
+                    <option value="ERROR">
+                        ERROR
+                    </option>
+                </select>
+
+
+                <select
+                    id="missionEventType"
+                    class="mission-filter"
+                >
+                    <option value="">
+                        ALL EVENTS
+                    </option>
+                </select>
+
+            </div>
+
+
+            <div class="mission-stat-strip">
+
+                <div>
+                    <span>EVENTS</span>
+                    <strong id="missionEventCount">
+                        0
+                    </strong>
+                </div>
+
+                <div>
+                    <span>MISSIONS</span>
+                    <strong id="missionCount">
+                        0
+                    </strong>
+                </div>
+
+                <div>
+                    <span>ERRORS</span>
+                    <strong id="missionErrorCount">
+                        0
+                    </strong>
+                </div>
+
+                <div>
+                    <span>WARNINGS</span>
+                    <strong id="missionWarningCount">
+                        0
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <div
+                id="eventLog"
+                class="event-log"
+                aria-live="polite"
+            ></div>
+
+        </article>
+
+
+        <article class="panel architecture-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <span class="panel-kicker">
+                        07 / PIPELINE
+                    </span>
+
+                    <h2>
+                        Ground Station Pipeline
+                    </h2>
+
+                </div>
+
+
+                <span class="panel-status status-good">
+                    ONLINE
+                </span>
+
+            </div>
+
+
+            <div class="pipeline">
+
+                <div
+                    class="pipeline-node active interactive-node"
+                    tabindex="0"
+                    data-pipeline="SDR"
+                >
+                    <span>01</span>
+                    <strong>SDR</strong>
+                    <small>RF / IQ</small>
+                </div>
+
+
+                <div class="pipeline-arrow">
+                    →
+                </div>
+
+
+                <div
+                    class="pipeline-node active interactive-node"
+                    tabindex="0"
+                    data-pipeline="DSP"
+                >
+                    <span>02</span>
+                    <strong>DSP</strong>
+                    <small>FILTER</small>
+                </div>
+
+
+                <div class="pipeline-arrow">
+                    →
+                </div>
+
+
+                <div
+                    class="pipeline-node active interactive-node"
+                    tabindex="0"
+                    data-pipeline="DEMOD"
+                >
+                    <span>03</span>
+                    <strong>DEMOD</strong>
+                    <small>AFSK / FM</small>
+                </div>
+
+
+                <div class="pipeline-arrow">
+                    →
+                </div>
+
+
+                <div
+                    class="pipeline-node active interactive-node"
+                    tabindex="0"
+                    data-pipeline="PACKET"
+                >
+                    <span>04</span>
+                    <strong>PACKET</strong>
+                    <small>AX.25 / KISS</small>
+                </div>
+
+
+                <div class="pipeline-arrow">
+                    →
+                </div>
+
+
+                <div
+                    class="pipeline-node active interactive-node"
+                    tabindex="0"
+                    data-pipeline="TELEM"
+                >
+                    <span>05</span>
+                    <strong>TELEM</strong>
+                    <small>DECODE</small>
+                </div>
+
+            </div>
+
+        </article>
+
+    </section>
+
+</main>
+
+
+<footer class="footer">
+
+    <div>
+        <strong>ORBITWATCH</strong>
+        <span>
+            Linux Satellite Ground Station
+        </span>
+    </div>
+
+    <div>
+        RECEIVE • DECODE • TRACK • ANALYZE
+    </div>
+
+    <div id="footerStatus">
+        SYSTEM INITIALIZING
+    </div>
+
+</footer>
+
+
+<!-- INTERACTIVE DETAIL DRAWER -->
+
+<div
+    class="detail-overlay"
+    id="detailOverlay"
+    aria-hidden="true"
+>
+
+    <aside
+        class="detail-drawer"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="detailTitle"
+    >
+
+        <div class="detail-header">
+
+            <div>
+
+                <span class="panel-kicker">
+                    ORBITWATCH / INSPECT
+                </span>
+
+                <h2 id="detailTitle">
+                    Detail
+                </h2>
+
+            </div>
+
+
+            <button
+                class="drawer-close"
+                id="detailClose"
+                type="button"
+                title="Close detail panel"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            class="detail-body"
+            id="detailBody"
+        ></div>
+
+    </aside>
+
+</div>
+
+
+<div
+    class="interaction-hint"
+    id="interactionHint"
+>
+    INTERACTIVE MODE • CLICK DATA PANELS TO INSPECT
+</div>
+
+
+<script
+    src="{{ url_for('static', filename='js/dashboard.js') }}"
+></script>
+
+</body>
+</html>
